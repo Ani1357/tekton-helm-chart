@@ -35,6 +35,17 @@ endif
 	# Move content of data: from git-resolver-config-cm.yaml to gitResolverConfig: in values.yaml
 	yq -i '.gitResolverConfig = load("$(CHART_DIR)/templates/git-resolver-config-cm.yaml").data' $(CHART_DIR)/values.yaml
 	yq -i '.data = null' $(CHART_DIR)/templates/git-resolver-config-cm.yaml
+	# Extract image values from release into values.yaml
+	yq -i '.controller.deployment.image = load("$(CHART_DIR)/templates/tekton-pipelines-controller-deploy.yaml").spec.template.spec.containers[0].image' $(CHART_DIR)/values.yaml
+	yq -i '.controller.images.entrypoint = (load("$(CHART_DIR)/templates/tekton-pipelines-controller-deploy.yaml").spec.template.spec.containers[0].args | . as $$a | (to_entries[] | select(.value == "-entrypoint-image") | .key + 1) as $$i | $$a[$$i])' $(CHART_DIR)/values.yaml
+	yq -i '.controller.images.nop = (load("$(CHART_DIR)/templates/tekton-pipelines-controller-deploy.yaml").spec.template.spec.containers[0].args | . as $$a | (to_entries[] | select(.value == "-nop-image") | .key + 1) as $$i | $$a[$$i])' $(CHART_DIR)/values.yaml
+	yq -i '.controller.images.sidecarlogresults = (load("$(CHART_DIR)/templates/tekton-pipelines-controller-deploy.yaml").spec.template.spec.containers[0].args | . as $$a | (to_entries[] | select(.value == "-sidecarlogresults-image") | .key + 1) as $$i | $$a[$$i])' $(CHART_DIR)/values.yaml
+	yq -i '.controller.images.workingdirinit = (load("$(CHART_DIR)/templates/tekton-pipelines-controller-deploy.yaml").spec.template.spec.containers[0].args | . as $$a | (to_entries[] | select(.value == "-workingdirinit-image") | .key + 1) as $$i | $$a[$$i])' $(CHART_DIR)/values.yaml
+	yq -i '.controller.images.shellImage = (load("$(CHART_DIR)/templates/tekton-pipelines-controller-deploy.yaml").spec.template.spec.containers[0].args | . as $$a | (to_entries[] | select(.value == "-shell-image") | .key + 1) as $$i | $$a[$$i])' $(CHART_DIR)/values.yaml
+	yq -i '.controller.images.shellImageWin = (load("$(CHART_DIR)/templates/tekton-pipelines-controller-deploy.yaml").spec.template.spec.containers[0].args | . as $$a | (to_entries[] | select(.value == "-shell-image-win") | .key + 1) as $$i | $$a[$$i])' $(CHART_DIR)/values.yaml
+	yq -i '.webhook.deployment.image = load("$(CHART_DIR)/templates/tekton-pipelines-webhook-deploy.yaml").spec.template.spec.containers[0].image' $(CHART_DIR)/values.yaml
+	yq -i '.remoteresolver.deployment.image = load("$(CHART_DIR)/templates/tekton-pipelines-remote-resolvers-deploy.yaml").spec.template.spec.containers[0].image' $(CHART_DIR)/values.yaml
+	yq -i '.eventscontroller.deployment.image = load("$(CHART_DIR)/templates/tekton-events-controller-deploy.yaml").spec.template.spec.containers[0].image' $(CHART_DIR)/values.yaml
 	# Remove image: from tekton-pipelines-controller-deploy
 	yq -i 'del(.spec.template.spec.containers[].image)' $(CHART_DIR)/templates/tekton-pipelines-controller-deploy.yaml
 	# Remove image: from tekton-pipelines-webhook-deploy
