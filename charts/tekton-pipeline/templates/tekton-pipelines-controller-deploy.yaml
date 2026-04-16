@@ -59,17 +59,17 @@ spec:
       containers:
       - args:
         - -entrypoint-image
-        - {{ .Values.controller.images.entrypoint }}
+        - '{{ .Values.controller.images.entrypoint }}'
         - -nop-image
-        - {{ .Values.controller.images.nop }}
+        - '{{ .Values.controller.images.nop }}'
         - -sidecarlogresults-image
-        - {{ .Values.controller.images.sidecarlogresults }}
+        - '{{ .Values.controller.images.sidecarlogresults }}'
         - -workingdirinit-image
-        - {{ .Values.controller.images.workingdirinit }}
+        - '{{ .Values.controller.images.workingdirinit }}'
         - -shell-image
-        - {{ .Values.controller.images.shellImage }}
+        - '{{ .Values.controller.images.shellImage }}'
         - -shell-image-win
-        - {{ .Values.controller.images.shellImageWin }}
+        - '{{ .Values.controller.images.shellImageWin }}'
         env:
         - name: SYSTEM_NAMESPACE
           valueFrom:

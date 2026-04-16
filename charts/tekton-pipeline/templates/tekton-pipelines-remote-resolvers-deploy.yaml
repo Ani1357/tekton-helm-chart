@@ -82,7 +82,6 @@ spec:
           value: ""
         - name: ARTIFACT_HUB_API
           value: https://artifacthub.io/
-        image: {{ .Values.remoteresolver.deployment.image }}
         name: controller
         ports:
         - containerPort: 9090
@@ -108,6 +107,7 @@ spec:
         volumeMounts:
         - mountPath: /tmp
           name: tmp-clone-volume
+        image: {{ .Values.remoteresolver.deployment.image }}
       nodeSelector:
           {{- with .Values.remoteresolver.nodeSelector }}
             {{- toYaml . |  nindent 8 }}

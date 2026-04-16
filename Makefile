@@ -11,9 +11,9 @@ fetch:
 	mkdir -p ${CHART_DIR}/templates
 	mkdir -p $(CHART_DIR)/crds
 ifeq ($(CHART_VERSION),latest)
-	curl -sS https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml > ${CHART_DIR}/templates/resource.yaml
+	curl -sSL https://github.com/tektoncd/pipeline/releases/latest/download/release.yaml > ${CHART_DIR}/templates/resource.yaml
 else
-	curl -sS https://storage.googleapis.com/tekton-releases/pipeline/previous/v${CHART_VERSION}/release.yaml > ${CHART_DIR}/templates/resource.yaml
+	curl -sSL https://github.com/tektoncd/pipeline/releases/download/v${CHART_VERSION}/release.yaml > ${CHART_DIR}/templates/resource.yaml
 endif
 	jx gitops split -d ${CHART_DIR}/templates
 	jx gitops rename -d ${CHART_DIR}/templates
@@ -61,7 +61,7 @@ endif
 	find $(CHART_DIR)/templates -type f -name "*aggregate*clusterrole.yaml" -exec sh -c 'sed -i.bak "1s/{{- if .Values.createClusterRoles }}/{{- if and .Values.createAggregateRoles .Values.createClusterRoles }}/" "$$1" && rm "$$1.bak"' _ {} \;
 	cp src/templates/* ${CHART_DIR}/templates
 ifneq ($(CHART_VERSION),latest)
-	sed -i.bak "s/^appVersion:.*/appVersion: ${CHART_VERSION}/" ${CHART_DIR}/Chart.yaml
+	sed -i.bak "s/^appVersion:.*/appVersion: ${CHART_VERSION}/" ${CHART_DIR}/Chart.yaml && rm ${CHART_DIR}/Chart.yaml.bak
 endif
 
 version:
