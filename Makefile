@@ -37,6 +37,12 @@ endif
 	yq -i '.data = null' $(CHART_DIR)/templates/git-resolver-config-cm.yaml
 	# Remove image: from tekton-pipelines-controller-deploy
 	yq -i 'del(.spec.template.spec.containers[].image)' $(CHART_DIR)/templates/tekton-pipelines-controller-deploy.yaml
+	# Remove image: from tekton-pipelines-webhook-deploy
+	yq -i 'del(.spec.template.spec.containers[].image)' $(CHART_DIR)/templates/tekton-pipelines-webhook-deploy.yaml
+	# Remove image: from tekton-pipelines-remote-resolvers-deploy
+	yq -i 'del(.spec.template.spec.containers[].image)' $(CHART_DIR)/templates/tekton-pipelines-remote-resolvers-deploy.yaml
+	# Remove image: from tekton-events-controller-deploy
+	yq -i 'del(.spec.template.spec.containers[].image)' $(CHART_DIR)/templates/tekton-events-controller-deploy.yaml
 	# Make node affinity configurable
 	yq -i '.webhook.affinity.nodeAffinity = load("$(CHART_DIR)/templates/tekton-pipelines-webhook-deploy.yaml").spec.template.spec.affinity.nodeAffinity' $(CHART_DIR)/values.yaml
 	yq -i 'del(.spec.template.spec.affinity.nodeAffinity)' $(CHART_DIR)/templates/tekton-pipelines-webhook-deploy.yaml
